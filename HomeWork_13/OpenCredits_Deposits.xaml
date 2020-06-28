@@ -1,0 +1,23 @@
+﻿<Window x:Class="HomeWork_13.OpenCredits_Deposits"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HomeWork_13"
+        mc:Ignorable="d"
+        Title="OpenCredits_Deposits" Height="230.787" Width="324.18"
+        MinHeight="230"
+        MinWidth="320">
+    <Grid>
+        <Button x:Name="Open_btn" Content="Открыть" HorizontalAlignment="Left" Margin="10,160,0,0" VerticalAlignment="Top" Width="296" Height="29" Click="Open_btn_Click"/>
+        <Label x:Name="Sum_lbl" HorizontalAlignment="Left" Margin="59,10,0,0" VerticalAlignment="Top" Width="247" Content="{Binding ElementName=Sum_slider, Path=Value }"/>
+        <Slider x:Name="Sum_slider" HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top" Width="296" ValueChanged="Sum_slider_ValueChanged" SmallChange="1000" LargeChange="1000" IsSnapToTickEnabled="True"/>
+        <Label x:Name="Mont_lbl" Content="Срок:" HorizontalAlignment="Left" Margin="10,59,0,0" VerticalAlignment="Top"/>
+        <Slider x:Name="Month_slider" HorizontalAlignment="Left" Margin="10,85,0,0" VerticalAlignment="Top" Width="296" ValueChanged="Month_slider_ValueChanged" SmallChange="1" IsSnapToTickEnabled="True"/>
+        <Label x:Name="Payment_lbl" Content="Ежемесячный платеж:" HorizontalAlignment="Left" Margin="10,108,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="Percent_lbl" Content="Процент:" HorizontalAlignment="Left" Margin="10,134,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="Mont_lbl_Copy" Content="Сумма:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="Mont_lbl_Copy1" Content="{Binding ElementName=Month_slider, Path=Value}" HorizontalAlignment="Left" Margin="50,59,0,0" VerticalAlignment="Top"/>
+
+    </Grid>
+</Window>

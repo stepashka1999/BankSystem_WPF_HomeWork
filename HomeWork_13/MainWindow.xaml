@@ -1,0 +1,67 @@
+﻿<Window x:Class="HomeWork_13.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HomeWork_13"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="497" Width="800">
+    <Grid x:Name="AllFunctions">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10*" MinWidth="125"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="10*"  MinWidth="200"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="10*" MinWidth="125"/>
+
+        </Grid.ColumnDefinitions>
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="5"/>
+        <GridSplitter Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="5"/>
+        <TabControl Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0,124" >
+            <TabItem Header="Clients">
+                <Grid Background="#FFE5E5E5">
+                    <TreeView x:Name="tv_Clients" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectedItemChanged="TreeView_SelectedItemChanged"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Employees">
+                <Grid Background="#FFE5E5E5">
+                    <TreeView x:Name="tv_Employees" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectedItemChanged="TreeView_SelectedItemChanged"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Transactions">
+                <ListBox x:Name="Transactions_lb" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            </TabItem>
+        </TabControl>
+        <Label Content="VIP" Grid.Column="2" HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top" Width="106" Background="White" Foreground="#FF0878FF" Visibility="Hidden"/>
+        <Button x:Name="Open_credit_btn" Content="Open Credit" Grid.Column="2" HorizontalAlignment="Stretch" Margin="41,308,41,0" VerticalAlignment="Top" Width="179" Click="Open_credit_btn_Click"/>
+        <Button x:Name="Open_deposit_btn" Content="Open Deposit" Grid.Column="2" HorizontalAlignment="Stretch" Margin="41,333,41,0" VerticalAlignment="Top" Width="179" Click="Open_deposit_btn_Click"/>
+        <Button x:Name="Make_transact_btn" Content="Make Transaction" Grid.Column="2" HorizontalAlignment="Stretch" Margin="5,221,5,0" VerticalAlignment="Top" Width="179" Click="Make_transact_btn_Click"/>
+        <Button x:Name="request_transact_btn" Content="Request Transaction" Grid.Column="2" HorizontalAlignment="Stretch" Margin="5,246,5,0" VerticalAlignment="Top" Width="179" Click="request_transact_btn_Click"/>
+        <Button x:Name="Vip_btn" Content="VIP" Grid.Column="2" HorizontalAlignment="Stretch" Margin="5,280,5,0" VerticalAlignment="Top" Width="179" Click="Vip_btn_Click"/>
+        <GroupBox Header="Info" HorizontalAlignment="Stretch" Height="168" VerticalAlignment="Top" Grid.Column="2" Margin="0,48,0,0">
+            <Label x:Name="Info_lbl" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        </GroupBox>
+        <TabControl Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+            <TabItem Header="Deposits">
+                <Grid Background="#FFE5E5E5">
+                    <ListBox x:Name="Deposits" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="Deposits_SelectionChanged"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Credits">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="12*"/>
+                        <ColumnDefinition Width="19*"/>
+                    </Grid.ColumnDefinitions>
+                    <ListBox x:Name="Credits" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="2" SelectionChanged="Deposits_SelectionChanged" />
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <Button x:Name="Close_Credit_btn" Content="Close Credit" Grid.Column="2" HorizontalAlignment="Stretch" Margin="41,364,41,0" VerticalAlignment="Top" Width="179" Click="Close_Credit_btn_Click"/>
+        <Button x:Name="Close_Deposit_btn" Content="Close Deposit" Grid.Column="2" HorizontalAlignment="Stretch" Margin="41,389,41,0" VerticalAlignment="Top" Width="179" Click="Close_Deposit_btn_Click"/>
+        <Button x:Name="makePayment_btn" Content="Simulate payment" Grid.Column="2" HorizontalAlignment="Left" Margin="10,14,0,0" VerticalAlignment="Top" Width="241" Height="29" Click="makePayment_btn_Click"/>
+        <Button x:Name="Add_btn" Content="Add" HorizontalAlignment="Left" Margin="10,358,0,0" VerticalAlignment="Top" Width="241" Click="AddClient_btn_Click"/>
+        <Button x:Name="Delete_btn" Content="Delete" HorizontalAlignment="Left" Margin="10,389,0,0" VerticalAlignment="Top" Width="241" Click="DeleteClient_btn_Click"/>
+        <Button x:Name="Edit_btn" Content="Edit" HorizontalAlignment="Left" Margin="10,423,0,0" VerticalAlignment="Top" Width="241" Click="Edit_btn_Click"/>
+    </Grid>
+</Window>
