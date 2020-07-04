@@ -5,7 +5,7 @@ CREATE TABLE [dbo].[Clients]
 	FName NVARCHAR(50) NOT NULL,
 	LName NVARCHAR(50) NOT NULL,
 	IsVip BIT NOT NULL, -- I hope that "bool"
-	Account INT NOT NULL,
+	Account BIGINT NOT NULL,
 	Amount MONEY NOT NULL,
 )
 
@@ -14,7 +14,7 @@ CREATE TABLE [dbo].[Entitys]
 (
 	Id INT NOT NULL IDENTITY,
 	EntityName NVARCHAR(50) NOT NULL,
-	Account INT NOT NULL,
+	Account BIGINT NOT NULL,
 	Amount MONEY NOT NULL
 )
 
@@ -33,6 +33,7 @@ CREATE TABLE dbo.Deposits
 (
 	Id INT NOT NULL IDENTITY,
 	HolderId INT NOT NULL,
+	Amount MONEY NOT NULL,
 	DepositMonth INT NOT NULL,
 	isEntity BIT NOT NULL
 )
@@ -44,6 +45,6 @@ CREATE TABLE dbo.Employees
 	Id INT NOT NULL IDENTITY,
 	FName NVARCHAR(50) NOT NULL,
 	LName NVARCHAR(50) NOT NULL,
-	Phone INT NOT NULL,
+	Phone BIGINT NOT NULL,
 	DepartamentId INT NOT NULL
 )
