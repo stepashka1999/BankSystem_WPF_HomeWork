@@ -14,7 +14,7 @@ namespace HomeWork_13
         public MainWindow()
         {
             InitializeComponent();
-            bank = new Bank("Pis' Pis' Bank");
+            bank = new Bank("Pis' Pis' Bank", Dispatcher);
             DataContext = bank;
             bank.FillTreeViewClients(tv_Clients);
             bank.FillTreeViewEmployees(tv_Employees);
@@ -22,6 +22,7 @@ namespace HomeWork_13
 
             ClientButtons(Visibility.Hidden);
             CloseCreditDeposit(Visibility.Hidden);
+
         }
 
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -176,7 +177,7 @@ namespace HomeWork_13
         {
             var item = tv_Clients.SelectedItem;
 
-            bank.MakePayment();
+            bank.MakePaymentTask();
 
             if(item != null)
             {

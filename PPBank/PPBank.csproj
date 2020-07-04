@@ -55,6 +55,7 @@
     <Compile Include="Helper\Deposit.cs" />
     <Compile Include="Helper\Employee.cs" />
     <Compile Include="Helper\ExtensionMethods.cs" />
+    <Compile Include="Helper\Log.cs" />
     <Compile Include="Helper\NotEnoughtMoneyExeption.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Helper\UnfilledInstanceExeption.cs" />

@@ -1,17 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.SqlTypes;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace PPBank
 {
     public class Bank
     {
-        ListBox transactionListBox;
+        //ListBox transactionListBox;
+
+        Dispatcher dispatcher; //MainWindow Dispatcher
+        ObservableCollection<Log> Logs;
 
         public string Name { get; private set; }
         public List<AClient> Clients { get; private set; }
@@ -23,11 +29,16 @@ namespace PPBank
         public VIPDepartament VipDepartament { get; private set; }
         public List<Employee> Employees { get; private set; }
 
-        public Bank(string Name)
+        public Bank(string Name, Dispatcher dispatcher)
         {
             this.Name = Name;
 
-            Fill();
+            var fillTask = Task.Factory.StartNew(Fill);
+            fillTask.Wait();
+            fillTask.Dispose();
+            
+            this.dispatcher = dispatcher;
+            //Fill();
         }
 
         private List<Employee> GetEmployees()
@@ -129,6 +140,8 @@ namespace PPBank
             VipDepartament = new VIPDepartament(this, "VipDepartament");
 
             Employees = GetEmployees();
+
+            Logs = new ObservableCollection<Log>();
         }
         private List<Credit> FillCredits()
         {
@@ -321,6 +334,13 @@ namespace PPBank
 
         #endregion
 
+        public void MakePaymentTask()
+        {
+            var doTask = Task.Factory.StartNew(MakePayment);
+            doTask.Wait();
+            doTask.Dispose();
+        }
+
         public void MakePayment()
         {
             foreach(var credit in Credits)
@@ -336,7 +356,8 @@ namespace PPBank
 
         public void SetTransactionList(ListBox lb)
         {
-            transactionListBox = lb;
+            lb.ItemsSource = Logs;   
+            //transactionListBox = lb;
 
             AClient.MoneyReceived += AClient_MoneyReceived;
             AClient.MoneySent += AClient_MoneySent;
@@ -350,55 +371,75 @@ namespace PPBank
             AClient.NotEnoughMoney += AClient_NotEnoughMoney;
         }
 
-        private void AClient_NotEnoughMoney(string obj)
+
+        #region Event Handlers
+
+
+        private async void AClient_NotEnoughMoney(string obj)
         {
-            transactionListBox.Items.Add(obj);
+            await dispatcher.InvokeAsync(() => Logs.Add(new Log() { Text = obj }));
+            //transactionListBox.Items.Add(obj);
         }
 
-        private void Deposit_MakedPayment(AClient arg1, Deposit arg2, System.Data.SqlTypes.SqlMoney arg3)
-        {
+        private async void Deposit_MakedPayment(AClient arg1, Deposit arg2, System.Data.SqlTypes.SqlMoney arg3)
+        {          
             var pattern = $"Клиент {arg1} закрыл депозит.\nСумма: {arg2.Amount}\nПроцент: {arg2.Percent}";
-            transactionListBox.Items.Add(pattern);
+
+            await dispatcher.InvokeAsync(()=> Logs.Add(new Log() { Text = pattern }));
+            // transactionListBox.Items.Add(pattern);
         }
 
-        private void Deposit_DepositOpend(AClient arg1, Deposit arg2)
+        private async void Deposit_DepositOpend(AClient arg1, Deposit arg2)
         {
             var pattern = $"Клиент {arg1} открыл депозит:\nСрок: {arg2.Month}\nСумма: {arg2.Amount}\nПроцент: {arg2.Percent}";
-            transactionListBox.Items.Add(pattern);
+
+            await dispatcher.InvokeAsync(() => Logs.Add(new Log() { Text = pattern }));
+            //transactionListBox.Items.Add(pattern);
         }
 
-
-
-        private void Credit_MakedPayment(AClient arg1, Credit arg2, System.Data.SqlTypes.SqlMoney arg3)
+        private async void Credit_MakedPayment(AClient arg1, Credit arg2, System.Data.SqlTypes.SqlMoney arg3)
         {
             var creditInfo = $"Сумма: {arg2.Amount} \nСрок: {arg2.Month} \nПроцент: {arg2.Percent}";
             var pattern = $"Клиент {arg1} сделал взнос по кредиту\nна сумму {arg3}. Credit: \n{creditInfo}";
-            transactionListBox.Items.Add(pattern);
+                        
+            await dispatcher.InvokeAsync(()=> Logs.Add(new Log() { Text = pattern }));
+            //transactionListBox.Items.Add(pattern);
         }
 
-        private void Credit_CreditOpend(AClient arg1, Credit arg2)
+        private async void Credit_CreditOpend(AClient arg1, Credit arg2)
         {
             var creditInfo = $"Сумма: {arg2.Amount} \nСрок: {arg2.Month}";
             var pattern = $"Клиент {arg1} Открыл кредит. Credit: \n{creditInfo}";
-            transactionListBox.Items.Add(pattern);
+
+            await dispatcher.InvokeAsync(() => Logs.Add(new Log() { Text = pattern }));
+            //transactionListBox.Items.Add(pattern);
         }
 
-        private void Credit_CreditClosed(AClient arg1, Credit arg2)
+        private async void Credit_CreditClosed(AClient arg1, Credit arg2)
         {
             var pattern = $"Клиент {arg1} закрыл кредит.";
-            transactionListBox.Items.Add(pattern);
+
+            await dispatcher.InvokeAsync(() => Logs.Add(new Log() { Text = pattern }));
+            //transactionListBox.Items.Add(pattern);
         }
 
-        private void AClient_MoneySent(AClient arg1, AClient arg2, System.Data.SqlTypes.SqlMoney arg3)
+        private async void AClient_MoneySent(AClient arg1, AClient arg2, System.Data.SqlTypes.SqlMoney arg3)
         {
             var pattern = $"Клиент {arg1} отправил\n{arg3} руб.\nклиенту {arg2}";
-            transactionListBox.Items.Add(pattern);
+
+            await dispatcher.InvokeAsync(() => Logs.Add(new Log() { Text = pattern }));
+            //transactionListBox.Items.Add(pattern);
         }
 
-        private void AClient_MoneyReceived(AClient arg1, AClient arg2, System.Data.SqlTypes.SqlMoney arg3)
+        private async void AClient_MoneyReceived(AClient arg1, AClient arg2, System.Data.SqlTypes.SqlMoney arg3)
         {
             var pattern = $"Клиент {arg1} \nполучил {arg3} руб. \nот клиента {arg2}";
-            transactionListBox.Items.Add(pattern);
+
+            await dispatcher.InvokeAsync(() => Logs.Add(new Log() { Text = pattern }));
+            //transactionListBox.Items.Add(pattern);
         }
+
+        #endregion
+
     }
 }
