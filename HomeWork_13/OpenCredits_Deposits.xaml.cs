@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,9 +24,12 @@ namespace HomeWork_13
         bool isCredit;
         AClient Client;
         Label info;
-        public OpenCredits_Deposits(object holder, bool credit, Label label)
+        SqlConnectionStringBuilder stringBuilder;
+
+        public OpenCredits_Deposits(object holder, bool credit, Label label, SqlConnectionStringBuilder stringBuilder)
         {
             InitializeComponent();
+            this.stringBuilder = stringBuilder;
             Client = (holder as AClient);
             isCredit = credit;
             info = label;
@@ -68,12 +72,15 @@ namespace HomeWork_13
             
             if(isCredit)
             {
-                Credit credit = new Credit(Client, Amount, Month);
+                BankDB.AddCredit(stringBuilder,Client,Amount, Month);
+                Credit credit = BankDB.GetLastCreditByHolder(stringBuilder, Client);
                 Client.OpenCredit(credit);
             }
             else
             {
-                Deposit deposit = new Deposit(Client, Amount, Month);
+                BankDB.AddDeposit(stringBuilder, Client, Amount, Month);
+
+                Deposit deposit = BankDB.GetLastDerpositByHolder(stringBuilder, Client);
                 Client.OpenDeposit(deposit);
             }
 

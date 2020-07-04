@@ -32,19 +32,19 @@ namespace PPBank
             Bank.DeleteEmployee(empl);
         }
 
-        public void Fill()
-        {
-            Random rnd = new Random();
-            for(int i = 0; i < 10; i++)
-            {
-                int fh_phone = rnd.Next(8_000_00, 9_000_00);
-                int sh_phone = rnd.Next(10_00_00, 100_00_00);
-                long phone = (long)fh_phone * 10_00_00 + sh_phone;
+        //public void Fill()
+        //{
+        //    Random rnd = new Random();
+        //    for(int i = 0; i < 10; i++)
+        //    {
+        //        int fh_phone = rnd.Next(8_000_00, 9_000_00);
+        //        int sh_phone = rnd.Next(10_00_00, 100_00_00);
+        //        long phone = (long)fh_phone * 10_00_00 + sh_phone;
 
-                Employee empl = new Employee(this, $"FNameE_{i}", $"LNameE_{i}", phone);
-                Employees.Add(empl);
-            }
-        }
+        //        Employee empl = new Employee(this, $"FNameE_{i}", $"LNameE_{i}", phone);
+        //        Employees.Add(empl);
+        //    }
+        //}
 
         public ADepartament(Bank Bank, string Name)
         {

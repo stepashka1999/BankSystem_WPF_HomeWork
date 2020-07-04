@@ -148,5 +148,9 @@
       <Name>PPBank</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="SqlQueries\DataQueris.sql" />
+    <Content Include="SqlQueries\CreationQueries.sql" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

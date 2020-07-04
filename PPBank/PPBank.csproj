@@ -43,22 +43,25 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helper\Bank.cs" />
-    <Compile Include="Helper\Clients\AClient.cs" />
-    <Compile Include="Helper\Clients\Client.cs" />
-    <Compile Include="Helper\Clients\Entity.cs" />
-    <Compile Include="Helper\Credit.cs" />
-    <Compile Include="Helper\Departaments\ADepartament.cs" />
-    <Compile Include="Helper\Departaments\Departament.cs" />
-    <Compile Include="Helper\Departaments\LegalDepartament.cs" />
-    <Compile Include="Helper\Departaments\VIPDepartament.cs" />
-    <Compile Include="Helper\Deposit.cs" />
-    <Compile Include="Helper\Employee.cs" />
+    <Compile Include="BankElements\Bank.cs" />
+    <Compile Include="Clients\AClient.cs" />
+    <Compile Include="Clients\Client.cs" />
+    <Compile Include="Clients\Entity.cs" />
+    <Compile Include="BankElements\Credit.cs" />
+    <Compile Include="Departaments\ADepartament.cs" />
+    <Compile Include="Departaments\Departament.cs" />
+    <Compile Include="Departaments\LegalDepartament.cs" />
+    <Compile Include="Departaments\VIPDepartament.cs" />
+    <Compile Include="BankElements\Deposit.cs" />
+    <Compile Include="BankElements\Employee.cs" />
+    <Compile Include="Helper\BankDB.cs" />
+    <Compile Include="Helper\ConvertSqlData.cs" />
     <Compile Include="Helper\ExtensionMethods.cs" />
-    <Compile Include="Helper\Log.cs" />
-    <Compile Include="Helper\NotEnoughtMoneyExeption.cs" />
+    <Compile Include="BankElements\Log.cs" />
+    <Compile Include="Exeptions\NotEnoughtMoneyExeption.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Helper\UnfilledInstanceExeption.cs" />
+    <Compile Include="Exeptions\UnfilledInstanceExeption.cs" />
+    <Compile Include="SQL DB\SqlConnector.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

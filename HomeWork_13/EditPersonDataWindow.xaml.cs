@@ -156,7 +156,7 @@ namespace HomeWork_13
                 MessageBox.Show("Поля заполнены некорретно.");
                 return;
             }
-
+            
             (empl as Employee).Edit(fName, lName, phone);
             EditEnded?.Invoke(empl);
             this.Close();

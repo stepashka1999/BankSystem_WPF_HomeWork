@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
@@ -8,46 +9,54 @@ using System.Windows;
 
 namespace PPBank
 {
-    public abstract class AClient
+    public abstract class AClient: INotifyPropertyChanged
     {
-        static public event Action<AClient, AClient, SqlMoney> MoneyReceived;
-        static public event Action<AClient, AClient, SqlMoney> MoneySent;
-
+        public event PropertyChangedEventHandler PropertyChanged;
+        
+        static public event Action<AClient, AClient, decimal> MoneyReceived;
+        static public event Action<AClient, AClient, decimal> MoneySent;
 
         public static event Action<AClient, Credit> CreditOpend;
         public static event Action<AClient, Credit> CreditClosed;
 
         public static event Action<AClient, Deposit> DepositOpend;
-        public static event Action<AClient, Deposit, SqlMoney> DepositClosed;
+        public static event Action<AClient, Deposit, decimal> DepositClosed;
         public static event Action<string> NotEnoughMoney;
 
         Bank Bank { get; set; }
-        public ulong Account { get; private set; }
-        public SqlMoney Amount { get; private set; }
+
+        public int Id { get; private set; }
+
+        private long account;
+        public long Account { get => account; private set { account = value; OnPropertyChanged(nameof(Account)); } }
+
+        private decimal amount;
+        public decimal Amount { get => amount; private set { amount = value; OnPropertyChanged(nameof(amount)); } }
         public CreditHistory CreditHistory { get; private set; }
         public virtual string Info { get; set; }
         
         public List<Credit> Credits { get; private set; }
         public List<Deposit> Deposits { get; private set; }
         
-        public AClient(Bank Bank, SqlMoney Amount, CreditHistory creditHistory = CreditHistory.Normal)
+        public AClient(Bank Bank, decimal Amount, int Id, CreditHistory creditHistory = CreditHistory.Normal)
         {
+            this.Id = Id;
             this.Bank = Bank;
             this.Amount = Amount;
             Credits = new List<Credit>();
             Deposits = new List<Deposit>();
             CreditHistory = creditHistory;
 
-            FillCredits();
-            FillDeposits();
+            //FillCredits();
+            //FillDeposits();
         }
-        public AClient(Bank Bank,ulong Account, SqlMoney Amount, CreditHistory creditHistory = CreditHistory.Normal): this(Bank ,Amount, creditHistory)
+        public AClient(Bank Bank,long Account, decimal Amount, int Id, CreditHistory creditHistory = CreditHistory.Normal): this(Bank, Amount, Id, creditHistory)
         {
             this.Account = Account;
         }
 
         
-        public int WithdrawMoney(SqlMoney money)
+        public int WithdrawMoney(decimal money)
         {
             if (Amount >= money)
             {
@@ -57,12 +66,12 @@ namespace PPBank
 
             throw new NotEnoughtMoneyExeption();
         }
-        public void InputMoney(SqlMoney money)
+        public void InputMoney(decimal money)
         {
             Amount += money;
         }
 
-        public void SendMoneyTo(AClient client, SqlMoney money)
+        public void SendMoneyTo(AClient client, decimal money)
         {
             try
             {
@@ -76,7 +85,7 @@ namespace PPBank
                 NotEnoughMoney?.Invoke(msg);
             }    
         }
-        public void RequestMoneyFrom(AClient client, SqlMoney money)
+        public void RequestMoneyFrom(AClient client, decimal money)
         {
             if (client.Amount >= money)
             {
@@ -105,7 +114,7 @@ namespace PPBank
             }
         }
 
-        public int MakePayment(SqlMoney money)
+        public int MakePayment(decimal money)
         {
             try
             {
@@ -141,24 +150,29 @@ namespace PPBank
             DepositOpend?.Invoke(this, deposit);
         }
 
-        private void FillCredits()
-        {
-            var rnd = new Random();
-            for(int i = 0; i < 2; i++)
-            {
-                var Amount = rnd.Next(100_000, 1_000_000);
-                Credits.Add(new Credit(this, Amount));
-            }
-        }
+        //private void FillCredits()
+        //{
+        //    var rnd = new Random();
+        //    for(int i = 0; i < 2; i++)
+        //    {
+        //        var Amount = rnd.Next(100_000, 1_000_000);
+        //        Credits.Add(new Credit(this, Amount));
+        //    }
+        //}
 
-        private void FillDeposits()
+        //private void FillDeposits()
+        //{
+        //    var rnd = new Random();
+        //    for (int i = 0; i < 2; i++)
+        //    {
+        //        var Amount = rnd.Next(100_000, 1_000_000);
+        //        Deposits.Add(new Deposit(this, Amount));
+        //    }
+        //}
+
+        public void OnPropertyChanged(string name)
         {
-            var rnd = new Random();
-            for (int i = 0; i < 2; i++)
-            {
-                var Amount = rnd.Next(100_000, 1_000_000);
-                Deposits.Add(new Deposit(this, Amount));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 }

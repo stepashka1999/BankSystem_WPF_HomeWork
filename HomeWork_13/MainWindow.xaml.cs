@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using PPBank;
 
 namespace HomeWork_13
 {
+
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
@@ -117,7 +119,7 @@ namespace HomeWork_13
             var item = tv_Clients.SelectedItem;
             var client = (item as AClient);
 
-            var window = new OpenCredits_Deposits(client, true, Info_lbl);
+            var window = new OpenCredits_Deposits(client, true, Info_lbl, bank.connectionStringBuilder);
             window.Show();
             window.Closed += Window_Closed;
         }
@@ -135,7 +137,7 @@ namespace HomeWork_13
             var item = tv_Clients.SelectedItem;
             var client = (item as Client);
 
-            var window = new OpenCredits_Deposits(client, false, Info_lbl);
+            var window = new OpenCredits_Deposits(client, false, Info_lbl, bank.connectionStringBuilder);
             window.Show();
             window.Closed += Window_Closed;
         }
@@ -192,7 +194,7 @@ namespace HomeWork_13
 
         private void AddClient_btn_Click(object sender, RoutedEventArgs e)
         {
-            var addWind = new AddClient_Window(bank);
+            var addWind = new AddClient_Window(bank, bank.connectionStringBuilder);
             
             addWind.ClientCreated += ClientCreated;
             addWind.EmployeeCreated += EmployeeCreated;
@@ -227,20 +229,39 @@ namespace HomeWork_13
             }
 
             var strokePtrn = $"{client.FirstName} {client.LastName}\n теперь с нами!";
-            Transactions_lb.Items.Add(strokePtrn);
+            bank.AddLog(strokePtrn);
+            //Transactions_lb.Items.Add(strokePtrn);
         }
 
         private void EmployeeCreated(Employee empl)
         {
-            bank.AddEmployee(empl, tv_Employees);
+            bank.AddEmployee(empl);
 
             var strokePtrn = $"{empl.FirstName} {empl.LastName}\n теперь наш сотрудник!";
-            Transactions_lb.Items.Add(strokePtrn);
+            bank.AddLog(strokePtrn);
+            if (empl.Departament is Departament)
+            {
+                (tv_Employees.Items[0] as TreeViewItem).ItemsSource = bank.Employees.Where(x => x.Departament is Departament);
+            }
+            else if (empl.Departament is LegalDepartament)
+            {
+                (tv_Employees.Items[1] as TreeViewItem).ItemsSource = bank.Employees.Where(x => x.Departament is LegalDepartament);
+            }
+            else if (empl.Departament is VIPDepartament)
+            {
+                (tv_Employees.Items[2] as TreeViewItem).ItemsSource = bank.Employees.Where(x => x.Departament is VIPDepartament);
+            }
         }
 
         private void DeleteClient_btn_Click(object sender, RoutedEventArgs e)
         {
             var item = tv_Clients.SelectedItem;
+
+            if (item == null)
+            {
+                item = tv_Employees.SelectedItem;
+            }
+
 
             if (item is AClient)
             {
@@ -279,6 +300,18 @@ namespace HomeWork_13
         private void DeleteEmployee(Employee empl)
         {
             bank.DeleteEmployee(empl, tv_Employees);
+            if (empl.Departament is Departament)
+            {
+                (tv_Employees.Items[0] as TreeViewItem).ItemsSource = bank.Employees.Where(x => x.Departament is Departament);
+            }
+            else if (empl.Departament is LegalDepartament)
+            {
+                (tv_Employees.Items[1] as TreeViewItem).ItemsSource = bank.Employees.Where(x => x.Departament is LegalDepartament);
+            }
+            else if(empl.Departament is VIPDepartament)
+            {
+                (tv_Employees.Items[2] as TreeViewItem).ItemsSource = bank.Employees.Where(x => x.Departament is VIPDepartament);
+            }
         }
 
         private void Edit_btn_Click(object sender, RoutedEventArgs e)
@@ -319,6 +352,11 @@ namespace HomeWork_13
                 (tv_Clients.Items[2] as TreeViewItem).ItemsSource = entitys;
             }
 
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            bank.UpdateAllData();
         }
     }
 }

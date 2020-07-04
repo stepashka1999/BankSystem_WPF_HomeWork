@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +29,7 @@ namespace HomeWork_13
     partial class AddClient_Window : Window
     {
         Bank bank;
+        SqlConnectionStringBuilder stringBuilder;
 
         public Action<Client> ClientCreated;
         public Action<Employee> EmployeeCreated;
@@ -35,7 +37,7 @@ namespace HomeWork_13
 
         CreationType creationType;
 
-        public AddClient_Window(Bank bank)
+        public AddClient_Window(Bank bank, SqlConnectionStringBuilder stringBuilder)
         {
             InitializeComponent();
 
@@ -46,6 +48,7 @@ namespace HomeWork_13
             ClientType_cb.SelectedIndex = 0;
             DepartamentType_cb.SelectedIndex = 0;
 
+            this.stringBuilder = stringBuilder;
             this.bank = bank;
             EmplUI(Visibility.Hidden);
         }
@@ -112,18 +115,20 @@ namespace HomeWork_13
             var FirstName = FName_tb.Text;
             var SecondName = LName_tb.Text;
             var isVip = VIP_cb.IsChecked;
-            var money = Convert.ToInt32(Money_tb.Text);
+            var money = Convert.ToDecimal(Money_tb.Text);
 
-            var FAccoutn = rnd.Next(10_000, 100_000);
-            var SAccoutn = rnd.Next(1_000_000, 10_000_000);
-            ulong Account = (ulong)(FAccoutn * 10_000_000 + SAccoutn);
+            var FAccoutn = (long)rnd.Next(10_000, 100_000);
+            var SAccoutn = (long)rnd.Next(1_000_000, 10_000_000);
+            long Account = (FAccoutn * 10_000_000 + SAccoutn);
 
             if(String.IsNullOrEmpty(FirstName) || String.IsNullOrEmpty(SecondName))
             {
                 return null;
             }
 
-            var client = new Client(bank, FirstName, SecondName, (bool)isVip, Account, money);
+            BankDB.AddClient(bank.connectionStringBuilder, FirstName, SecondName, (bool)isVip, Account, money);
+
+            var client = BankDB.GetLastClient(stringBuilder, bank);
 
             return client;
         }
@@ -139,16 +144,20 @@ namespace HomeWork_13
             long Phone = GetInt(phoneText);
 
             ADepartament dep = null;
+            int depId = 0;
 
             switch (DepartamentType_cb.SelectedIndex)
             {
                 case 0:
+                    depId = 1;
                     dep = bank.SimpleDepartament;
                     break;
                 case 1:
+                    depId = 3;
                     dep = bank.EntityDepartament;
                     break;
                 case 2:
+                    depId = 2;
                     dep = bank.VipDepartament;
                     break;
             }
@@ -158,7 +167,8 @@ namespace HomeWork_13
                 return null;
             }
 
-            var empl = new Employee(dep, FirstName, SecondName, Phone);
+            BankDB.AddEmployee(stringBuilder, FirstName, SecondName, Phone, depId);
+            var empl = BankDB.GetLastEmployee(stringBuilder, dep);
 
             return empl;
         }
@@ -181,15 +191,15 @@ namespace HomeWork_13
             var Name = FName_tb.Text;
             var FAccoutn = rnd.Next(10_000, 100_000);
             var SAccoutn = rnd.Next(1_000_000, 10_000_000);
-            ulong Account = (ulong)(FAccoutn * (1_000_000) + SAccoutn);
-            var money = Convert.ToInt32(Money_tb.Text);
+            long Account = (FAccoutn * (1_000_000) + SAccoutn);
+            var money = Convert.ToDecimal(Money_tb.Text);
 
-            if (String.IsNullOrEmpty(Name))
+            if (string.IsNullOrEmpty(Name))
             {
                 return null;
             }
-
-            var entity = new Entity(bank, Name, Account, money);
+            BankDB.AddEntity(stringBuilder, Name, Account, money);
+            var entity = BankDB.GetLastEntity(stringBuilder, bank);
 
             return entity;
         }
@@ -244,7 +254,7 @@ namespace HomeWork_13
 
         private void Money_tb_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            e.Handled = !(Char.IsDigit(e.Text, 0));
+            e.Handled = !(char.IsDigit(e.Text, 0));
         }
     }
 }
