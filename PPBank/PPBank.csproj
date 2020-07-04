@@ -61,7 +61,7 @@
     <Compile Include="Exeptions\NotEnoughtMoneyExeption.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Exeptions\UnfilledInstanceExeption.cs" />
-    <Compile Include="SQL DB\SqlConnector.cs" />
+    <Compile Include="Helper\SqlConnector.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
