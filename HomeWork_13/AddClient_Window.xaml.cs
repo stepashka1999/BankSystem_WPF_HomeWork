@@ -73,6 +73,7 @@ namespace HomeWork_13
                     }
 
                     break;
+
                 case CreationType.Employee:
 
                     var empl = CreateEmployee();
@@ -185,7 +186,12 @@ namespace HomeWork_13
                 if (char.IsDigit(simbol)) res += simbol;
             }
 
-            return Convert.ToInt64(res);
+            long longRes;
+            if (long.TryParse(res, out longRes))
+            {
+                return longRes;
+            }
+            return 0;
         }
 
         private Entity CreateEntity()
@@ -193,8 +199,8 @@ namespace HomeWork_13
             var rnd = new Random();
 
             var Name = FName_tb.Text;
-            var FAccoutn = rnd.Next(10_000, 100_000);
-            var SAccoutn = rnd.Next(1_000_000, 10_000_000);
+            var FAccoutn = (long)rnd.Next(10_000, 100_000);
+            var SAccoutn = (long)rnd.Next(1_000_000, 10_000_000);
             long Account = (FAccoutn * (1_000_000) + SAccoutn);
             decimal money;
 

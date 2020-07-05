@@ -227,12 +227,6 @@ namespace PPBank
 
         public void AddClient(AClient client)
         {
-
-            if (client.Account == default(long) || client.Amount == default)
-            {
-                throw new UnfilledInstanceExeption();
-            }
-
             Clients.Add(client);
         }
 
