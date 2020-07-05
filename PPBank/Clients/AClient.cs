@@ -139,6 +139,7 @@ namespace PPBank
 
         public void OpenCredit(Credit credit)
         {
+            Amount += credit.Amount;
             CreditOpend?.Invoke(this, credit);
             Credits.Add(credit);
         }

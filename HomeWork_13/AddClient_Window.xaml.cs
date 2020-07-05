@@ -115,16 +115,19 @@ namespace HomeWork_13
             var FirstName = FName_tb.Text;
             var SecondName = LName_tb.Text;
             var isVip = VIP_cb.IsChecked;
-            var money = Convert.ToDecimal(Money_tb.Text);
+            decimal money;
+
+            if (String.IsNullOrEmpty(FirstName) || String.IsNullOrEmpty(SecondName) || !decimal.TryParse(Money_tb.Text, out money))
+            {
+                return null;
+            }
+
 
             var FAccoutn = (long)rnd.Next(10_000, 100_000);
             var SAccoutn = (long)rnd.Next(1_000_000, 10_000_000);
             long Account = (FAccoutn * 10_000_000 + SAccoutn);
 
-            if(String.IsNullOrEmpty(FirstName) || String.IsNullOrEmpty(SecondName))
-            {
-                return null;
-            }
+            
 
             BankDB.AddClient(bank.connectionStringBuilder, FirstName, SecondName, (bool)isVip, Account, money);
 
@@ -132,6 +135,7 @@ namespace HomeWork_13
 
             return client;
         }
+
 
         private Employee CreateEmployee()
         {
@@ -192,9 +196,9 @@ namespace HomeWork_13
             var FAccoutn = rnd.Next(10_000, 100_000);
             var SAccoutn = rnd.Next(1_000_000, 10_000_000);
             long Account = (FAccoutn * (1_000_000) + SAccoutn);
-            var money = Convert.ToDecimal(Money_tb.Text);
+            decimal money;
 
-            if (string.IsNullOrEmpty(Name))
+            if (string.IsNullOrEmpty(Name) || !decimal.TryParse(Money_tb.Text, out money))
             {
                 return null;
             }

@@ -13,6 +13,7 @@ namespace HomeWork_13
     public partial class MainWindow : Window
     {
         Bank bank;
+        object currentItem;
         public MainWindow()
         {
             InitializeComponent();
@@ -38,6 +39,7 @@ namespace HomeWork_13
                 Info_lbl.Content = (item as AClient).Info;
                 Credits.ItemsSource = (item as AClient).Credits;
                 Deposits.ItemsSource = (item as AClient).Deposits;
+                currentItem = item;
             }
             else if (item is Employee)
             {
@@ -48,6 +50,8 @@ namespace HomeWork_13
                 Credits.ItemsSource = null;
                 Deposits.ItemsSource = null;
                 Info_lbl.Content = (item as Employee).Info;
+
+                currentItem = item;
             }
             else
             {
@@ -55,17 +59,19 @@ namespace HomeWork_13
                 CloseCreditDeposit(Visibility.Hidden);
                 OrganisationButtons(Visibility.Hidden);
             }
+
         }
 
         private void Make_transact_btn_Click(object sender, RoutedEventArgs e)
         {
-            var item = tv_Clients.SelectedItem;
-            var client = (item as AClient);
+            if (currentItem is AClient)
+            {
+                var client = (currentItem as AClient);
+                var window = new TransactToWindow(bank, client, true, Info_lbl);
+                window.Show();
 
-            var window = new TransactToWindow(bank, client, true, Info_lbl);
-            window.Show();
-
-            Info_lbl.Content = client.Info;
+                Info_lbl.Content = client.Info;
+            }
         }
 
         private void ClientButtons(Visibility visibility)
@@ -94,34 +100,40 @@ namespace HomeWork_13
 
         private void request_transact_btn_Click(object sender, RoutedEventArgs e)
         {
-            var item = tv_Clients.SelectedItem;
-            var client = (item as AClient);
+            if (currentItem is AClient)
+            {
+                var client = (currentItem as AClient);
 
-            var window = new TransactToWindow(bank, client, false, Info_lbl);
-            window.Show();
+                var window = new TransactToWindow(bank, client, false, Info_lbl);
+                window.Show();
 
-            Info_lbl.Content = client.Info;
+                Info_lbl.Content = client.Info;
+            }
         }
 
         private void Vip_btn_Click(object sender, RoutedEventArgs e)
         {
-            var item = tv_Clients.SelectedItem;
-            var client = (item as Client);
+            if (currentItem is Client)
+            {
+                var client = (currentItem as Client);
 
-            client.MakeVIP();
-            Info_lbl.Content = client.Info;
-            tv_Clients.Items.Clear();
-            bank.FillTreeViewClients(tv_Clients);
+                client.MakeVIP();
+                Info_lbl.Content = client.Info;
+                tv_Clients.Items.Clear();
+                bank.FillTreeViewClients(tv_Clients);
+            }
         }
 
         private void Open_credit_btn_Click(object sender, RoutedEventArgs e)
         {
-            var item = tv_Clients.SelectedItem;
-            var client = (item as AClient);
+            if (currentItem is AClient)
+            {
+                var client = (currentItem as AClient);
 
-            var window = new OpenCredits_Deposits(client, true, Info_lbl, bank.connectionStringBuilder);
-            window.Show();
-            window.Closed += Window_Closed;
+                var window = new OpenCredits_Deposits(client, true, Info_lbl, bank.connectionStringBuilder);
+                window.Show();
+                window.Closed += Window_Closed;
+            }
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -134,40 +146,46 @@ namespace HomeWork_13
 
         private void Open_deposit_btn_Click(object sender, RoutedEventArgs e)
         {
-            var item = tv_Clients.SelectedItem;
-            var client = (item as Client);
+            if (currentItem is AClient)
+            {
+                var client = (currentItem as AClient);
 
-            var window = new OpenCredits_Deposits(client, false, Info_lbl, bank.connectionStringBuilder);
-            window.Show();
-            window.Closed += Window_Closed;
+                var window = new OpenCredits_Deposits(client, false, Info_lbl, bank.connectionStringBuilder);
+                window.Show();
+                window.Closed += Window_Closed;
+            }
         }
 
         private void Close_Credit_btn_Click(object sender, RoutedEventArgs e)
         {
-            var clietn = tv_Clients.SelectedItem as AClient;
-
-            var credit = (Credits.SelectedItem as Credit);
-            if(credit != null && clietn!= null)
+            if (currentItem is AClient)
             {
-                clietn.CloseCredit(credit);
-                Credits.Items.Refresh();
-            }
+                var clietn = currentItem as AClient;
+                var credit = (Credits.SelectedItem as Credit);
+                if (credit != null && clietn != null)
+                {
+                    clietn.CloseCredit(credit);
+                    Credits.Items.Refresh();
+                }
 
-            Info_lbl.Content = clietn.Info;
+                Info_lbl.Content = clietn.Info;
+            }
         }
 
         private void Close_Deposit_btn_Click(object sender, RoutedEventArgs e)
         {
-            var clietn = tv_Clients.SelectedItem as AClient;
-
-            var deposit = (Deposits.SelectedItem as Deposit);
-            if (deposit != null && clietn != null)
+            if (currentItem is AClient)
             {
-                clietn.CloseDeposit(deposit);
-                Deposits.Items.Refresh();
-            }
+                var clietn = currentItem as AClient;
+                var deposit = (Deposits.SelectedItem as Deposit);
+                if (deposit != null && clietn != null)
+                {
+                    clietn.CloseDeposit(deposit);
+                    Deposits.Items.Refresh();
+                }
 
-            Info_lbl.Content = clietn.Info;
+                Info_lbl.Content = clietn.Info;
+            }
         }
 
         private void Deposits_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -176,20 +194,16 @@ namespace HomeWork_13
         }
 
         private void makePayment_btn_Click(object sender, RoutedEventArgs e)
-        {
-            var item = tv_Clients.SelectedItem;
-
-            bank.MakePaymentTask();
-
-            if(item != null)
+        { 
+            if (currentItem is AClient)
             {
-                var client = (item as AClient);
+                bank.MakePaymentTask();
+
+                var client = (currentItem as AClient);
                 Info_lbl.Content = client.Info;
+                Credits.Items.Refresh();
+                Deposits.Items.Refresh();
             }
-            
-       
-            Credits.Items.Refresh();
-            Deposits.Items.Refresh();
         }
 
         private void AddClient_btn_Click(object sender, RoutedEventArgs e)
@@ -210,7 +224,7 @@ namespace HomeWork_13
             (tv_Clients.Items[2] as TreeViewItem).ItemsSource = entitys;
 
             var strokePtrn = $"{entity.Name}\n теперь сотрудничает с нами!";
-            Transactions_lb.Items.Add(strokePtrn);
+            bank.AddLog(strokePtrn);
         }
 
         private void ClientCreated(Client client)
@@ -230,7 +244,6 @@ namespace HomeWork_13
 
             var strokePtrn = $"{client.FirstName} {client.LastName}\n теперь с нами!";
             bank.AddLog(strokePtrn);
-            //Transactions_lb.Items.Add(strokePtrn);
         }
 
         private void EmployeeCreated(Employee empl)
@@ -255,21 +268,13 @@ namespace HomeWork_13
 
         private void DeleteClient_btn_Click(object sender, RoutedEventArgs e)
         {
-            var item = tv_Clients.SelectedItem;
-
-            if (item == null)
+            if (currentItem is AClient)
             {
-                item = tv_Employees.SelectedItem;
+                DeleteAClient(currentItem as AClient);
             }
-
-
-            if (item is AClient)
+            else if(currentItem is Employee)
             {
-                DeleteAClient(item as AClient);
-            }
-            else if(item is Employee)
-            {
-                DeleteEmployee(item as Employee);
+                DeleteEmployee(currentItem as Employee);
             }
         }
 
@@ -316,16 +321,9 @@ namespace HomeWork_13
 
         private void Edit_btn_Click(object sender, RoutedEventArgs e)
         {
-            var item = tv_Clients.SelectedItem;
-            
-            if (item == null)
+            if (currentItem is AClient || currentItem is Employee)
             {
-                item = tv_Employees.SelectedItem;
-            }
-            
-            if (item is AClient || item is Employee)
-            {
-                var editWind = new EditPersonDataWindow(item);
+                var editWind = new EditPersonDataWindow(currentItem);
                 editWind.EditEnded += EditWind_EditEnded;
                 editWind.Show();
             }

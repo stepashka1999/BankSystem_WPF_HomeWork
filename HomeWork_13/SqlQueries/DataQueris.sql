@@ -35,3 +35,6 @@ SELECT TOP 1 *
 FROM Credits
 WHERE HolderId = 1
 ORDER BY ID DESC
+
+INSERT INTO Deposits(HolderId, Amount, CreditMonth, isEntity)
+                              VALUES ({holder.Id}, @amount, {month}, {isEntity})

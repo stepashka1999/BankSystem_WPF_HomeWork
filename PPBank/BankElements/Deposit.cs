@@ -31,7 +31,7 @@ namespace PPBank
             this.Holder = Holder;
             this.Amount = Amount;
             this.Month = Month;
-            Payment = (decimal)Percent / 100;
+            Payment = (decimal)Amount*(Percent / 100)/12;
 
         }
 

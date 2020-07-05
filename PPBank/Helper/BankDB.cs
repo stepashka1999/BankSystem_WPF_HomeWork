@@ -378,7 +378,7 @@ namespace PPBank
             if (holder is Entity) isEntity = 1;
             else if (holder is Client) isEntity = 0;
 
-            var sqlQuery = $@"INCERT INTO Credits(HolderId, Amount, CreditMonth, isEntity)
+            var sqlQuery = $@"INSERT INTO Credits(HolderId, Amount, CreditMonth, isEntity)
                               VALUES ({holder.Id}, @amount, {month}, {isEntity})";
 
             using (SqlConnector connector = new SqlConnector(stringBuilder))
@@ -395,7 +395,7 @@ namespace PPBank
             if (holder is Entity) isEntity = 1;
             else if (holder is Client) isEntity = 0;
 
-            var sqlQuery = $@"INCERT INTO Deposits(HolderId, Amount, CreditMonth, isEntity)
+            var sqlQuery = $@"INSERT INTO Deposits (HolderId, Amount, DepositMonth, isEntity)
                               VALUES ({holder.Id}, @amount, {month}, {isEntity})";
 
             using (SqlConnector connector = new SqlConnector(stringBuilder))
