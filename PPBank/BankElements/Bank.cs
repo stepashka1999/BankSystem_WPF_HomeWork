@@ -17,13 +17,7 @@ namespace PPBank
     public class Bank
     {
         //ListBox transactionListBox;
-        public SqlConnectionStringBuilder connectionStringBuilder = new SqlConnectionStringBuilder()
-        {
-            DataSource = @"(localdb)\MSSQLLocalDB",
-            InitialCatalog = "MSSQLLocal_TestDb",
-            IntegratedSecurity = true,
-            Pooling = true
-        };
+        public SqlConnectionStringBuilder connectionStringBuilder;
 
         Dispatcher dispatcher; //MainWindow Dispatcher
         ObservableCollection<Log> Logs;
@@ -38,8 +32,10 @@ namespace PPBank
         public VIPDepartament VipDepartament { get; private set; }
         public List<Employee> Employees { get; private set; }
 
-        public Bank(string Name, Dispatcher dispatcher)
+        public Bank(string Name, Dispatcher dispatcher, SqlConnectionStringBuilder connectionStringBuilder)
         {
+            this.connectionStringBuilder = connectionStringBuilder;
+          
             this.Name = Name;
 
             //var fillTask = Task.Factory.StartNew(Fill);
@@ -50,7 +46,6 @@ namespace PPBank
             this.dispatcher = dispatcher;
             //Fill();
         }
-
 
         //Fill data from Data Base
         #region DataBaseFill

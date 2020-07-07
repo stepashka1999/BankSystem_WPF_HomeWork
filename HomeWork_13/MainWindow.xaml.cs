@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,7 +18,15 @@ namespace HomeWork_13
         public MainWindow()
         {
             InitializeComponent();
-            bank = new Bank("Pis' Pis' Bank", Dispatcher);
+
+
+            var connection = SetConnection();
+            if (string.IsNullOrEmpty(connection.DataSource) || string.IsNullOrEmpty(connection.InitialCatalog))
+            {
+                return;
+            }
+
+            bank = new Bank("Pis' Pis' Bank", Dispatcher, connection);
             DataContext = bank;
             bank.FillTreeViewClients(tv_Clients);
             bank.FillTreeViewEmployees(tv_Employees);
@@ -26,6 +35,25 @@ namespace HomeWork_13
             ClientButtons(Visibility.Hidden);
             CloseCreditDeposit(Visibility.Hidden);
 
+        }
+
+        private SqlConnectionStringBuilder SetConnection()
+        {
+            SqlConnectionStringBuilder connection = new SqlConnectionStringBuilder()
+            {
+                DataSource = "",
+                InitialCatalog = "",
+                IntegratedSecurity = true,
+                Pooling = true
+            };
+            var setWindow = new SetConnectionStringWindow(connection);
+            setWindow.ShowDialog();
+
+            if (string.IsNullOrEmpty(connection.DataSource) || string.IsNullOrEmpty(connection.InitialCatalog))
+            {
+                this.Close();
+            }
+            return connection;
         }
 
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -58,6 +86,7 @@ namespace HomeWork_13
                 ClientButtons(Visibility.Hidden);
                 CloseCreditDeposit(Visibility.Hidden);
                 OrganisationButtons(Visibility.Hidden);
+                currentItem = null;
             }
 
         }
@@ -354,7 +383,7 @@ namespace HomeWork_13
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            bank.UpdateAllData();
+            if(bank != null) bank.UpdateAllData();
         }
     }
 }

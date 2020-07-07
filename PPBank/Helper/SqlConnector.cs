@@ -83,6 +83,7 @@ namespace PPBank.SQL_DB
         public void Dispose()
         {
             Connection.Close();
+            Connection.Dispose();
         }
     }
 }

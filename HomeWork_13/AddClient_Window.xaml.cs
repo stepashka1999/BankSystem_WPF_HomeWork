@@ -123,6 +123,8 @@ namespace HomeWork_13
                 return null;
             }
 
+            if (money < 0) return null;
+
 
             var FAccoutn = (long)rnd.Next(10_000, 100_000);
             var SAccoutn = (long)rnd.Next(1_000_000, 10_000_000);
@@ -208,6 +210,8 @@ namespace HomeWork_13
             {
                 return null;
             }
+            if (money < 0) return null;
+
             BankDB.AddEntity(stringBuilder, Name, Account, money);
             var entity = BankDB.GetLastEntity(stringBuilder, bank);
 
